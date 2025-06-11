@@ -1,54 +1,71 @@
 const output = document.getElementById("output");
 const cursor = document.getElementById("cursor");
 
-const commands = {
-  help: `
-Available commands:
-  /vault         -> Secure node (inaccessible)
-  /AI            -> Interface module offline
-  /bio-organism  -> [View Ghotet Entity Log]
-  /projects      -> List of active deployments
-  clear          -> Clear console`,
-  "/bio-organism": `Redirecting...
-Dev.to: https://dev.to/ghotet
-GitHub: https://github.com/ghotet`,
-  "/vault": `ACCESS DENIED: Clearance level insufficient.`,
-  "/AI": `Interface module currently unavailable. Awaiting consciousness sync...`,
-  "/projects": `- Project Mirage
-- AI OS Stack (modular build)
-- Terminal UI Layer
-- DME Rebuild Initiative`,
-  clear: () => output.innerHTML = ""
-};
+// Terminal setup
+let commandBuffer = "";
 
-function print(text) {
-  output.innerHTML += `\n${text}`;
-}
+// Boot sequence
+const bootMessages = [
+  "Welcome to ghotet.com",
+  "Initializing system...",
+  "Boot complete.",
+  "Launching terminal...",
+  "Loading AI stack...",
+  "Ready.\n"
+];
 
-function runCommand(input) {
-  const command = input.trim();
-  const result = commands[command];
-  if (typeof result === "function") {
-    result();
-  } else if (result) {
-    print(result);
+// Simulate boot sequence
+let bootIndex = 0;
+function runBootSequence() {
+  if (bootIndex < bootMessages.length) {
+    output.innerHTML += bootMessages[bootIndex++] + "\n";
+    setTimeout(runBootSequence, 500);
   } else {
-    print(`Command not recognized: '${command}' (type 'help' to list commands)`);
+    printPrompt();
   }
 }
 
-let currentInput = "";
+// Print prompt
+function printPrompt() {
+  output.innerHTML += "> ";
+}
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    print(`\n> ${currentInput}`);
-    runCommand(currentInput);
-    currentInput = "";
-  } else if (event.key === "Backspace") {
-    currentInput = currentInput.slice(0, -1);
-  } else if (event.key.length === 1) {
-    currentInput += event.key;
+// Handle command input
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Backspace") {
+    commandBuffer = commandBuffer.slice(0, -1);
+    output.innerHTML = output.innerHTML.slice(0, -1);
+  } else if (e.key === "Enter") {
+    output.innerHTML += "\n";
+    handleCommand(commandBuffer.trim());
+    commandBuffer = "";
+    printPrompt();
+  } else if (e.key.length === 1) {
+    commandBuffer += e.key;
+    output.innerHTML += e.key;
   }
+
+  // Scroll to bottom
+  window.scrollTo(0, document.body.scrollHeight);
+});
+
+function handleCommand(cmd) {
+  const commands = {
+    help: "Available commands:\nhelp\nls\nbio-organism",
+    ls: "/vault\n/AI\n/bio-organism",
+    "bio-organism": "Ghotet – Systems dev\nhttps://github.com/ghotet\nhttps://dev.to/ghotet"
+  };
+
+  if (commands[cmd]) {
+    output.innerHTML += commands[cmd] + "\n";
+  } else {
+    output.innerHTML += `Command not found: ${cmd}\n`;
+  }
+}
+
+// Kick off
+runBootSequence();
+
 
   cursor.previousSibling.textContent = currentInput;
 });
