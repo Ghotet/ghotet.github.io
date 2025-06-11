@@ -1,88 +1,99 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const consoleEl = document.getElementById("console");
+    const consoleEl = document.getElementById("console");
+    const outputEl = document.getElementById("output");
+    const cursorEl = document.getElementById("cursor");
 
-  const introLines = [
-    "Welcome to ghotet.com",
-    "Initializing system...",
-    "Boot complete.",
-    "Launching terminal...",
-    "Loading blacksite index...",
-    "Ready.\n"
-  ];
-
-  let lineIndex = 0;
-
-  function typeLine(line, i = 0, callback) {
-    if (i < line.length) {
-      consoleEl.innerHTML += line[i];
-      setTimeout(() => typeLine(line, i + 1, callback), 30);
-    } else {
-      consoleEl.innerHTML += "\n";
-      callback();
-    }
-  }
-
-  function runIntro(callback) {
-    if (lineIndex < introLines.length) {
-      typeLine(introLines[lineIndex], 0, () => {
-        lineIndex++;
-        runIntro(callback);
-      });
-    } else {
-      showMenu();
-    }
-  }
-
-  function showMenu() {
-    const options = [
-      "1. /vault",
-      "2. /AI",
-      "3. /bio-organism"
+    const introLines = [
+        "Welcome to ghotet.com",
+        "Initializing system...",
+        "Boot complete.",
+        "Launching terminal...",
+        "Loading AI stack...",
+        "Ready.",
+        "",
+        "/AI      /Vault      /Bio",
+        "",
+        "Enter a number:",
+        "1. Access /AI",
+        "2. Open /Vault",
+        "3. Read /Bio"
     ];
-    consoleEl.innerHTML += "\nDirectory listing:\n";
-    options.forEach(line => consoleEl.innerHTML += line + "\n");
-    consoleEl.innerHTML += "\nEnter a number to access a file:\n";
-    showPrompt();
-  }
 
-  function showPrompt() {
-    const input = document.createElement("input");
-    input.autofocus = true;
+    let inputBuffer = "";
 
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        const choice = input.value.trim();
-        consoleEl.removeChild(input);
-        consoleEl.innerHTML += `> ${choice}\n`;
-        processChoice(choice);
-      }
+    function printLine(text = "") {
+        const line = document.createElement("div");
+        line.textContent = text;
+        outputEl.appendChild(line);
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    async function printIntro(lines, delay = 200) {
+        for (const line of lines) {
+            printLine(line);
+            await new Promise(r => setTimeout(r, delay));
+        }
+        showPrompt();
+    }
+
+    function showPrompt() {
+        const inputLine = document.createElement("div");
+        inputLine.textContent = "█ ";
+        const inputSpan = document.createElement("span");
+        inputSpan.setAttribute("id", "input-span");
+        inputLine.appendChild(inputSpan);
+        outputEl.appendChild(inputLine);
+        cursorEl.style.display = "inline";
+    }
+
+    function handleCommand(cmd) {
+        printLine(`> ${cmd}`);
+        switch (cmd) {
+            case "1":
+                printLine("Accessing /AI... (not yet wired)");
+                break;
+            case "2":
+                printLine("Opening /Vault... (coming soon)");
+                break;
+            case "3":
+                printLine("Reading /Bio...");
+                printLine("2 files found:");
+                printLine("1. Dev.to Profile");
+                printLine("2. GitHub Profile");
+                printLine("Type 1 or 2 to open a link.");
+                break;
+            case "1.1":
+                window.open("https://dev.to/ghotet", "_blank");
+                break;
+            case "1.2":
+                window.open("https://github.com/ghotet", "_blank");
+                break;
+            default:
+                printLine("Unknown command.");
+                break;
+        }
+        showPrompt();
+    }
+
+    document.addEventListener("keydown", (e) => {
+        const inputSpan = document.getElementById("input-span");
+
+        if (!inputSpan) return;
+
+        if (e.key === "Backspace") {
+            inputBuffer = inputBuffer.slice(0, -1);
+        } else if (e.key === "Enter") {
+            handleCommand(inputBuffer.trim());
+            inputBuffer = "";
+            inputSpan.textContent = "";
+            return;
+        } else if (e.key.length === 1) {
+            inputBuffer += e.key;
+        }
+
+        inputSpan.textContent = inputBuffer;
     });
 
-    consoleEl.appendChild(input);
-    input.focus();
-  }
-
-  function processChoice(choice) {
-    switch (choice) {
-      case "1":
-        consoleEl.innerHTML += "Accessing /vault...\n[DATA ENCRYPTED — CLEARANCE LEVEL REDACTED]\n";
-        break;
-      case "2":
-        consoleEl.innerHTML += "Launching /AI...\n[UNSTABLE BUILD — ACCESS LOCKED]\n";
-        break;
-      case "3":
-        consoleEl.innerHTML += "Searching /bio-organism...\n2 files found:\n";
-        consoleEl.innerHTML += "1. [DEVLOG.TERMINAL] https://dev.to/ghotet\n";
-        consoleEl.innerHTML += "2. [SOURCE.MIRROR] https://github.com/ghotet\n";
-        break;
-      default:
-        consoleEl.innerHTML += "Invalid selection.\n";
-    }
-    consoleEl.innerHTML += "\n";
-    showMenu();
-  }
-
-  // Kick things off
-  runIntro();
+    printIntro(introLines);
 });
 
