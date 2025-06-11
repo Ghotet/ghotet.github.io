@@ -1,39 +1,55 @@
 const output = document.getElementById("output");
 const cursor = document.getElementById("cursor");
 
-const lines = [
-  "Welcome to ghotet.com",
-  "Initializing system...",
-  "Boot complete.",
-  "Launching terminal...",
-  "Loading AI stack...",
-  "Ready."
-];
+const commands = {
+  help: `
+Available commands:
+  /vault         -> Secure node (inaccessible)
+  /AI            -> Interface module offline
+  /bio-organism  -> [View Ghotet Entity Log]
+  /projects      -> List of active deployments
+  clear          -> Clear console`,
+  "/bio-organism": `Redirecting...
+Dev.to: https://dev.to/ghotet
+GitHub: https://github.com/ghotet`,
+  "/vault": `ACCESS DENIED: Clearance level insufficient.`,
+  "/AI": `Interface module currently unavailable. Awaiting consciousness sync...`,
+  "/projects": `- Project Mirage
+- AI OS Stack (modular build)
+- Terminal UI Layer
+- DME Rebuild Initiative`,
+  clear: () => output.innerHTML = ""
+};
 
-let index = 0;
+function print(text) {
+  output.innerHTML += `\n${text}`;
+}
 
-function typeLine(lineIndex = 0, charIndex = 0) {
-  if (lineIndex >= lines.length) {
-    cursor.style.display = "inline-block";
-    return;
-  }
-
-  const line = lines[lineIndex];
-  if (charIndex === 0) {
-    const newLine = document.createElement("div");
-    newLine.className = "line";
-    output.appendChild(newLine);
-  }
-
-  const currentLine = output.lastChild;
-  currentLine.textContent += line[charIndex];
-  cursor.style.display = charIndex % 2 === 0 ? "none" : "inline-block";
-
-  if (charIndex < line.length - 1) {
-    setTimeout(() => typeLine(lineIndex, charIndex + 1), 50);
+function runCommand(input) {
+  const command = input.trim();
+  const result = commands[command];
+  if (typeof result === "function") {
+    result();
+  } else if (result) {
+    print(result);
   } else {
-    setTimeout(() => typeLine(lineIndex + 1, 0), 300);
+    print(`Command not recognized: '${command}' (type 'help' to list commands)`);
   }
 }
 
-typeLine();
+let currentInput = "";
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    print(`\n> ${currentInput}`);
+    runCommand(currentInput);
+    currentInput = "";
+  } else if (event.key === "Backspace") {
+    currentInput = currentInput.slice(0, -1);
+  } else if (event.key.length === 1) {
+    currentInput += event.key;
+  }
+
+  cursor.previousSibling.textContent = currentInput;
+});
+
