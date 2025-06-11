@@ -5,28 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghotet Systems</title>
     <style>
-        body {
-            background-color: black;
-            color: #33ff33;
-            font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 0;
-            font-size: 18px;
+    body {
+        background-color: black;
+        color: #33ff33;
+        font-family: 'Courier New', monospace;
+        margin: 0;
+        padding: 0;
+        font-size: 18px;
+    }
+
+    #console {
+        white-space: pre-wrap;
+        margin: 20px;
+        padding: 20px;
+        border: 2px solid #33ff33;
+    }
+
+    #output {
+        display: inline;
+    }
+
+    .flashing-cursor {
+        animation: blink 0.8s step-end infinite;
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
         }
-        #console {
-            white-space: pre;
-            margin: 20px;
-            padding: 20px;
-            border: 2px solid #33ff33;
-        }
-        .flashing-cursor {
-            animation: blink 0.8s step-end infinite;
-        }
-        @keyframes blink {
-            from, to { opacity: 0 }
-            50% { opacity: 1 }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <div id="console">
