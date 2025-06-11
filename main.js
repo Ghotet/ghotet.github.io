@@ -48,7 +48,9 @@ function printIntro() {
   const introText = `Welcome to ghotet.com\nInitializing system...\nBoot complete.\nLaunching terminal...\nLoading AI stack...\nReady.`;
   slowPrint(introText, () => {
     printMainMenu();
-    document.body.appendChild(inputArea);
+    if (!document.body.contains(inputArea)) {
+      document.body.appendChild(inputArea);
+    }
     inputArea.focus();
   }, 10);
 }
