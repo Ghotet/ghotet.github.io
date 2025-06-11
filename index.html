@@ -20,4 +20,18 @@
             border: 2px solid #33ff33;
         }
         .flashing-cursor {
-            animation: blink 0.8s step-e
+            animation: blink 0.8s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { opacity: 0 }
+            50% { opacity: 1 }
+        }
+    </style>
+</head>
+<body>
+    <div id="console">
+        <div id="output"></div><span id="cursor" class="flashing-cursor">█</span>
+    </div>
+    <script src="script.js" defer></script>
+</body>
+</html>
