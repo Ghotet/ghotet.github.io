@@ -32,7 +32,6 @@ function printLine(text = "", flicker = false) {
   if (flicker) {
     line.classList.add("flicker");
   }
-  
   output.appendChild(line);
   window.scrollTo(0, document.body.scrollHeight); // Scroll to bottom
 }
@@ -66,6 +65,13 @@ function slowPrint(text, callback, speed = 10) {
   nextLine();
 }
 
+// Add cursor to the terminal
+function addCursor() {
+  const cursor = document.createElement("span");
+  cursor.classList.add("cursor");
+  document.getElementById("terminal").appendChild(cursor);
+}
+
 // Initial intro sequence
 function printIntro() {
   const introText = `Welcome to ghotet.com\nInitializing system...\nBoot complete.\nLaunching terminal...\nLoading AI stack...\nReady.`;
@@ -74,6 +80,7 @@ function printIntro() {
     printMainMenu();
     document.body.appendChild(inputWrapper);
     inputArea.focus();
+    addCursor(); // Add the cursor to the terminal
   });
 }
 
