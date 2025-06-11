@@ -1,115 +1,85 @@
-const output = document.getElementById("output");
-const cursor = document.getElementById("cursor");
+const consoleEl = document.getElementById("console");
 
-const commands = {
-    "/help": () => {
-        printLine("Available commands:");
-        printLine(" /AI");
-        printLine(" /vault");
-        printLine(" /bio");
-    },
-    "/AI": () => {
-        printLine("Accessing /AI...");
-        printLine(">> system status: idle");
-    },
-    "/vault": () => {
-        printLine("Accessing /vault...");
-        printLine(">> access denied. clearance required.");
-    },
-    "/bio": () => {
-        printLine("Scanning /bio-organism...");
-        printLine("2 files found.");
-        printLine(" 1. github");
-        printLine(" 2. dev.to");
-        printLine("Enter file number to open:");
-        waitingForFileInput = true;
-    }
-};
+const introLines = [
+  "Welcome to ghotet.com",
+  "Initializing system...",
+  "Boot complete.",
+  "Launching terminal...",
+  "Loading blacksite index...",
+  "Ready.\n"
+];
 
-let waitingForFileInput = false;
+let lineIndex = 0;
 
-document.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-        const inputLine = document.getElementById("input-line");
-        const command = inputLine.innerText.trim();
-        inputLine.remove();
-        cursor.remove();
-
-        printLine(`> ${command}`);
-
-        if (waitingForFileInput) {
-            handleBioCommand(command);
-        } else {
-            const cmd = commands[command];
-            if (cmd) {
-                cmd();
-            } else {
-                printLine("Unknown command. Try /help.");
-            }
-        }
-
-        addNewInputLine();
-    }
-});
-
-function handleBioCommand(input) {
-    waitingForFileInput = false;
-    if (input === "1") {
-        confirmLink("https://github.com/ghotet");
-    } else if (input === "2") {
-        confirmLink("https://dev.to/ghotet");
-    } else {
-        printLine("Invalid file number.");
-    }
+function typeLine(line, i = 0, callback) {
+  if (i < line.length) {
+    consoleEl.innerHTML += line[i];
+    setTimeout(() => typeLine(line, i + 1, callback), 30);
+  } else {
+    consoleEl.innerHTML += "\n";
+    callback();
+  }
 }
 
-function confirmLink(url) {
-    printLine(`Open ${url}? (y/n)`);
-    const confirmInput = document.createElement("div");
-    confirmInput.id = "input-line";
-    confirmInput.contentEditable = true;
-    confirmInput.spellcheck = false;
-    output.appendChild(confirmInput);
-    confirmInput.focus();
-
-    confirmInput.addEventListener("keydown", function handler(e) {
-        if (e.key === "Enter") {
-            const val = confirmInput.innerText.trim().toLowerCase();
-            confirmInput.remove();
-            if (val === "y") {
-                window.open(url, "_blank");
-                printLine("Opening in new tab...");
-            } else {
-                printLine("Cancelled.");
-            }
-            addNewInputLine();
-            confirmInput.removeEventListener("keydown", handler);
-        }
+function runIntro(callback) {
+  if (lineIndex < introLines.length) {
+    typeLine(introLines[lineIndex], 0, () => {
+      lineIndex++;
+      runIntro(callback);
     });
+  } else {
+    showMenu();
+  }
 }
 
-function printLine(text) {
-    const line = document.createElement("div");
-    line.textContent = text;
-    output.appendChild(line);
-    window.scrollTo(0, document.body.scrollHeight);
+function showMenu() {
+  const options = [
+    "1. /vault",
+    "2. /AI",
+    "3. /bio-organism"
+  ];
+  consoleEl.innerHTML += "\nDirectory listing:\n";
+  options.forEach(line => consoleEl.innerHTML += line + "\n");
+  consoleEl.innerHTML += "\nEnter a number to access a file:\n";
+  showPrompt();
 }
 
-function addNewInputLine() {
-    const newLine = document.createElement("div");
-    newLine.id = "input-line";
-    newLine.contentEditable = true;
-    newLine.spellcheck = false;
-    output.appendChild(newLine);
-    output.appendChild(cursor);
-    newLine.focus();
+function showPrompt() {
+  const input = document.createElement("input");
+  input.autofocus = true;
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const choice = input.value.trim();
+      consoleEl.removeChild(input);
+      consoleEl.innerHTML += `> ${choice}\n`;
+      processChoice(choice);
+    }
+  });
+
+  consoleEl.appendChild(input);
+  input.focus();
 }
 
-printLine("Welcome to ghotet.com");
-printLine("Initializing system...");
-printLine("Boot complete.");
-printLine("Launching terminal...");
-printLine("Loading AI stack...");
-printLine("Ready.");
-addNewInputLine();
+function processChoice(choice) {
+  switch (choice) {
+    case "1":
+      consoleEl.innerHTML += "Accessing /vault...\n[DATA ENCRYPTED — CLEARANCE LEVEL REDACTED]\n";
+      break;
+    case "2":
+      consoleEl.innerHTML += "Launching /AI...\n[UNSTABLE BUILD — ACCESS LOCKED]\n";
+      break;
+    case "3":
+      consoleEl.innerHTML += "Searching /bio-organism...\n2 files found:\n";
+      consoleEl.innerHTML += "1. [DEVLOG.TERMINAL] https://dev.to/ghotet\n";
+      consoleEl.innerHTML += "2. [SOURCE.MIRROR] https://github.com/ghotet\n";
+      break;
+    default:
+      consoleEl.innerHTML += "Invalid selection.\n";
+  }
+  consoleEl.innerHTML += "\n";
+  showMenu();
+}
 
+// Start it all
+runIntro();
