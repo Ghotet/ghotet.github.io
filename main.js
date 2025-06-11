@@ -23,39 +23,15 @@ inputArea.style.caretColor = "#33ff33";
 
 let currentState = "main";
 
+// Print line to terminal
 function printLine(text = "") {
   const line = document.createElement("div");
   line.textContent = text;
   output.appendChild(line);
-  window.scrollTo(0, document.body.scrollHeight);
+  window.scrollTo(0, document.body.scrollHeight); // Scroll to bottom
 }
 
-function slowPrint(text, callback, speed = 10) {
-  let index = 0;
-  const lines = text.split("\n");
-  function nextLine() {
-    if (index < lines.length) {
-      const line = document.createElement("div");
-      output.appendChild(line);
-      let charIndex = 0;
-      function typeChar() {
-        if (charIndex < lines[index].length) {
-          line.textContent += lines[index][charIndex];
-          charIndex++;
-          setTimeout(typeChar, speed);
-        } else {
-          index++;
-          setTimeout(nextLine, speed);
-        }
-      }
-      typeChar();
-    } else if (callback) {
-      callback();
-    }
-  }
-  nextLine();
-}
-
+// Initial intro sequence
 function printIntro() {
   const introText = `Welcome to ghotet.com\nInitializing system...\nBoot complete.\nLaunching terminal...\nLoading AI stack...\nReady.`;
   slowPrint(introText, () => {
@@ -66,9 +42,11 @@ function printIntro() {
   });
 }
 
+// Main menu options
 function printMainMenu() {
   printLine("/AI      /Vault      /Bio      /Project [REDACTED]      /EchoNode");
   printLine();
+  printLine("Press 'x' or 'c' to clear the terminal.");
   printLine("Enter a number:");
   printLine("1. Access /AI");
   printLine("2. Open /Vault");
@@ -78,10 +56,7 @@ function printMainMenu() {
   printLine();
 }
 
-function clearTerminal() {
-  output.innerHTML = "";
-}
-
+// Handle main input
 function handleMainInput(command) {
   clearTerminal();
   switch (command) {
@@ -124,18 +99,23 @@ function handleMainInput(command) {
   printMainMenu();
 }
 
+// Handle bio input
 function handleBioInput(command) {
   clearTerminal();
   switch (command) {
     case "1":
       printLine("> 1");
       printLine("Opening Dev.to in a new tab...");
-      window.open("https://dev.to/ghotet", "_blank");
+      setTimeout(() => {
+        window.open("https://dev.to/ghotet", "_blank");
+      }, 1000); // Simulate loading time
       break;
     case "2":
       printLine("> 2");
       printLine("Opening GitHub in a new tab...");
-      window.open("https://github.com/ghotet", "_blank");
+      setTimeout(() => {
+        window.open("https://github.com/ghotet", "_blank");
+      }, 1000);
       break;
     default:
       printLine(`> ${command}`);
@@ -143,13 +123,20 @@ function handleBioInput(command) {
   }
   currentState = "main";
   printLine();
-  printMainMenu();
 }
+
+// Add key listener to clear terminal with a single key (x or c)
+document.addEventListener("keydown", (e) => {
+  if (e.key === "x" || e.key === "c") {
+    clearTerminal();
+  }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   printIntro();
 });
 
+// Capture user input
 inputArea.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
     const command = inputArea.value.trim();
