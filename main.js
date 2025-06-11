@@ -20,7 +20,7 @@ inputArea.style.outline = "none";
 inputArea.style.font = "inherit";
 inputArea.style.width = "100%";
 inputArea.style.caretColor = "#33ff33";
-inputArea.style.opacity = "0"; // Make the input field invisible
+inputArea.style.opacity = "1"; // Make the input field visible inside the terminal
 
 let currentState = "main";
 
