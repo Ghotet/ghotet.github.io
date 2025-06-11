@@ -48,9 +48,7 @@ function printIntro() {
   const introText = `Welcome to ghotet.com\nInitializing system...\nBoot complete.\nLaunching terminal...\nLoading AI stack...\nReady.`;
   slowPrint(introText, () => {
     printMainMenu();
-    if (!document.body.contains(inputArea)) {
-      document.body.appendChild(inputArea);
-    }
+    document.body.appendChild(inputArea);
     inputArea.focus();
   }, 10);
 }
@@ -143,8 +141,3 @@ inputArea.addEventListener("keydown", function (e) {
     }
   }
 });
-
-
-    printIntro(introLines);
-});
-
