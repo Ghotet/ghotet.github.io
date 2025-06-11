@@ -20,13 +20,11 @@ inputArea.style.outline = "none";
 inputArea.style.font = "inherit";
 inputArea.style.width = "100%";
 inputArea.style.caretColor = "#33ff33";
-inputArea.style.position = "absolute";
-inputArea.style.bottom = "20px";
-inputArea.style.left = "20px"; // Keep it aligned to the bottom-left inside terminal
+inputArea.style.visibility = "hidden"; // Keep the input invisible outside the terminal box
 
 let currentState = "main";
 
-// Print line to terminal with optional flicker effect
+// Function to print line to terminal with optional flicker effect
 function printLine(text = "", flicker = false) {
   const line = document.createElement("div");
   line.textContent = text;
@@ -104,17 +102,15 @@ function printMainMenu() {
 // Handle input in main state
 function handleMainInput(command) {
   clearTerminal();
+  printLine(`> ${command}`, true); // Print the user command
   switch (command) {
     case "1":
-      printLine("> 1");
       printLine("Accessing /AI... (not yet wired)", true); // Flicker effect added
       break;
     case "2":
-      printLine("> 2");
       printLine("Opening /Vault... (coming soon)", true); // Flicker effect added
       break;
     case "3":
-      printLine("> 3");
       printLine("Reading /Bio...", true); // Flicker effect added
       setTimeout(() => {
         printLine("File system scan complete.");
@@ -126,12 +122,10 @@ function handleMainInput(command) {
       }, 500);
       return;
     case "4":
-      printLine("> 4");
       printLine("Attempting to access /Project [REDACTED]...", true); // Flicker effect added
       printLine("Clearance level insufficient. Returning to main menu.", true); // Flicker effect added
       break;
     case "5":
-      printLine("> 5");
       printLine("Pinging /EchoNode...", true); // Flicker effect added
       printLine("No response. Ghost protocol active.", true); // Flicker effect added
       break;
@@ -140,7 +134,6 @@ function handleMainInput(command) {
       clearTerminal();
       break;
     default:
-      printLine(`> ${command}`);
       printLine("Unknown command.", true); // Flicker effect added
   }
   currentState = "main";
@@ -151,23 +144,21 @@ function handleMainInput(command) {
 // Handle bio input
 function handleBioInput(command) {
   clearTerminal();
+  printLine(`> ${command}`, true); // Print the user command
   switch (command) {
     case "1":
-      printLine("> 1");
       printLine("Opening Dev.to in a new tab...");
       setTimeout(() => {
         window.open("https://dev.to/ghotet", "_blank");
       }, 1000); // Simulate loading time
       break;
     case "2":
-      printLine("> 2");
       printLine("Opening GitHub in a new tab...");
       setTimeout(() => {
         window.open("https://github.com/ghotet", "_blank");
       }, 1000);
       break;
     default:
-      printLine(`> ${command}`);
       printLine("Invalid selection.", true); // Flicker effect added
   }
   currentState = "main";
@@ -189,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
 inputArea.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
     const command = inputArea.value.trim();
-    inputArea.value = "";
+    inputArea.value = ""; // Clear input field
     if (currentState === "main") {
       handleMainInput(command);
     } else if (currentState === "bio") {
@@ -200,6 +191,6 @@ inputArea.addEventListener("keydown", function (e) {
 
 // Function to clear the terminal
 function clearTerminal() {
-  output.innerHTML = ''; // Clears the content inside the terminal
-  printMainMenu(); // Reprint the main menu or any starting content
+  output.innerHTML = '';  // Clears the content inside the terminal
+  printMainMenu();  // Reprint the main menu or any starting content
 }
