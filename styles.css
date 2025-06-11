@@ -1,0 +1,74 @@
+/* Reset some default styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Background & terminal UI */
+body {
+    background-color: #000;
+    color: #00FF00; /* Retro green */
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Terminal container */
+#terminal {
+    border: 2px solid #00FF00; /* Green glow border */
+    width: 80%;
+    max-width: 800px;
+    height: 80%;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+}
+
+/* Intro text & root structure */
+#output {
+    margin-bottom: 20px;
+}
+
+/* Animated cursor */
+.cursor {
+    animation: blink 1s infinite;
+}
+
+/* Typing cursor blink effect */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Input field */
+.input-field {
+    background-color: transparent;
+    border: none;
+    color: #00FF00;
+    width: 100%;
+    padding: 10px;
+    font-size: 1.5rem;
+    border-top: 1px solid #00FF00;
+    outline: none;
+    caret-color: #00FF00;
+}
+
+/* Glowing text on command output */
+.intro, .root-dir {
+    animation: glowText 2s ease-in-out infinite alternate;
+}
+
+@keyframes glowText {
+    0% {
+        text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 15px #00FF00;
+    }
+    100% {
+        text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
+    }
+}
