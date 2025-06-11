@@ -9,47 +9,40 @@
             background-color: black;
             color: #33ff33;
             font-family: "Courier New", monospace;
+            font-size: 18px;
             margin: 0;
             padding: 0;
-            font-size: 18px;
         }
 
         #console {
-            white-space: pre;
-            margin: 20px;
+            white-space: pre-wrap;
             padding: 20px;
-            border: 2px solid #33ff33;
         }
 
-        .flashing-cursor {
-            animation: blink 0.8s step-end infinite;
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            animation: blink 1s step-end infinite;
         }
 
         @keyframes blink {
-            from, to {
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
+            from, to { background-color: transparent; }
+            50% { background-color: #33ff33; }
         }
 
         input {
             background: transparent;
-            border: none;
             color: #33ff33;
+            border: none;
+            outline: none;
             font-family: inherit;
             font-size: inherit;
-            outline: none;
             width: 100%;
         }
     </style>
 </head>
 <body>
-    <div id="console">
-        <div id="output"></div>
-        <span id="cursor" class="flashing-cursor">█</span>
-    </div>
+    <div id="console"></div>
     <script src="main.js" defer></script>
 </body>
 </html>
