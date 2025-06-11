@@ -28,7 +28,7 @@ body {
     border: 2px solid #33ff33;
 }
 
-/* Input field */
+/* Styling for the terminal input field */
 #terminal-input {
     background: black;
     color: #33ff33;
@@ -38,30 +38,26 @@ body {
     width: 100%;
     caret-color: #33ff33;
     padding: 10px;
+    position: absolute; /* Position it inside the terminal */
+    bottom: 20px; /* Keep it at the bottom of the terminal */
+    left: 20px; /* Align it with the left side */
 }
 
-/* Cursor styling */
+/* Cursor inside input field (ensure blinking) */
 .cursor {
-  display: inline-block;
-  background-color: #33ff33;
-  width: 10px;
-  height: 20px;
-  margin-left: 5px;
-  animation: blink 1s step-end infinite;
-  vertical-align: middle; /* Keep it aligned with text */
-}
-
-/* Animation for cursor blinking */
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
+    display: inline-block;
+    background-color: #33ff33;
+    width: 10px;
+    height: 20px;
+    margin-left: 5px;
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
 }
 
 @keyframes blink {
-  50% {
-    opacity: 0;
-  }
+    50% {
+        opacity: 0;
+    }
 }
 
 /* Flicker effect */
