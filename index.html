@@ -3,42 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ghotet Systems</title>
+  <title>AI[ghotet] : shell access</title>
   <style>
     body {
       background-color: black;
       color: #33ff33;
-      font-family: "Courier New", monospace;
-      font-size: 18px;
+      font-family: 'Courier New', monospace;
       margin: 0;
       padding: 0;
+      font-size: 18px;
     }
+
     #console {
-      white-space: pre-wrap;
+      white-space: pre;
+      margin: 20px;
       padding: 20px;
+      border: 2px solid #33ff33;
     }
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      animation: blink 1s step-end infinite;
+
+    .flashing-cursor {
+      animation: blink 0.8s step-end infinite;
     }
+
     @keyframes blink {
-      from, to { background-color: transparent; }
-      50% { background-color: #33ff33; }
+      50% {
+        opacity: 0;
+      }
     }
-    input {
-      background: transparent;
-      color: #33ff33;
-      border: none;
-      outline: none;
-      font-family: inherit;
-      font-size: inherit;
-      width: 100%;
+
+    #input-line {
+      display: inline;
     }
   </style>
 </head>
 <body>
-  <div id="console"></div>
-  <script src="main.js" defer></script> <!-- ✅ this must stay as-is -->
+  <div id="console">
+    <div id="output"></div>
+    <div id="input-line">
+      <span id="input-text" contenteditable="true"></span><span class="flashing-cursor">█</span>
+    </div>
+  </div>
+  <script src="main.js" defer></script>
 </body>
 </html>
