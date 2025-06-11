@@ -20,7 +20,7 @@ inputArea.style.outline = "none";
 inputArea.style.font = "inherit";
 inputArea.style.width = "100%";
 inputArea.style.caretColor = "#33ff33";
-inputArea.style.visibility = "hidden"; // Keep the input invisible outside the terminal box
+inputArea.style.opacity = "0"; // Make the input field invisible
 
 let currentState = "main";
 
@@ -102,7 +102,7 @@ function printMainMenu() {
 // Handle input in main state
 function handleMainInput(command) {
   clearTerminal();
-  printLine(`> ${command}`, true); // Print the user command
+  printLine(`> ${command}`, true); // Print the user command inside terminal
   switch (command) {
     case "1":
       printLine("Accessing /AI... (not yet wired)", true); // Flicker effect added
@@ -144,7 +144,7 @@ function handleMainInput(command) {
 // Handle bio input
 function handleBioInput(command) {
   clearTerminal();
-  printLine(`> ${command}`, true); // Print the user command
+  printLine(`> ${command}`, true); // Print the user command inside terminal
   switch (command) {
     case "1":
       printLine("Opening Dev.to in a new tab...");
