@@ -1,4 +1,5 @@
 // main.js
+
 const output = document.getElementById("output");
 const inputWrapper = document.createElement("div");
 const inputArea = document.createElement("input");
@@ -22,26 +23,31 @@ inputArea.style.caretColor = "#33ff33";
 
 let currentState = "main";
 
-// Print line to terminal with a flicker effect
+// Print line to terminal with optional flicker effect
 function printLine(text = "", flicker = false) {
   const line = document.createElement("div");
   line.textContent = text;
+  
+  // If flicker is true, add the flicker effect
   if (flicker) {
     line.classList.add("flicker");
   }
+  
   output.appendChild(line);
   window.scrollTo(0, document.body.scrollHeight); // Scroll to bottom
 }
 
-// Slow print effect for typing text
+// Slow print function for typing text slowly
 function slowPrint(text, callback, speed = 10) {
   let index = 0;
   const lines = text.split("\n");
+  
   function nextLine() {
     if (index < lines.length) {
       const line = document.createElement("div");
       output.appendChild(line);
       let charIndex = 0;
+      
       function typeChar() {
         if (charIndex < lines[index].length) {
           line.textContent += lines[index][charIndex];
@@ -91,15 +97,15 @@ function handleMainInput(command) {
   switch (command) {
     case "1":
       printLine("> 1");
-      printLine("Accessing /AI... (not yet wired)", true);
+      printLine("Accessing /AI... (not yet wired)", true); // Flicker effect added
       break;
     case "2":
       printLine("> 2");
-      printLine("Opening /Vault... (coming soon)", true);
+      printLine("Opening /Vault... (coming soon)", true); // Flicker effect added
       break;
     case "3":
       printLine("> 3");
-      printLine("Reading /Bio...", true);
+      printLine("Reading /Bio...", true); // Flicker effect added
       setTimeout(() => {
         printLine("File system scan complete.");
         printLine("Fragmented record detected. Limited data recovered:");
@@ -111,13 +117,13 @@ function handleMainInput(command) {
       return;
     case "4":
       printLine("> 4");
-      printLine("Attempting to access /Project [REDACTED]...", true);
-      printLine("Clearance level insufficient. Returning to main menu.", true);
+      printLine("Attempting to access /Project [REDACTED]...", true); // Flicker effect added
+      printLine("Clearance level insufficient. Returning to main menu.", true); // Flicker effect added
       break;
     case "5":
       printLine("> 5");
-      printLine("Pinging /EchoNode...", true);
-      printLine("No response. Ghost protocol active.", true);
+      printLine("Pinging /EchoNode...", true); // Flicker effect added
+      printLine("No response. Ghost protocol active.", true); // Flicker effect added
       break;
     case "x":
     case "c":
@@ -125,7 +131,7 @@ function handleMainInput(command) {
       break;
     default:
       printLine(`> ${command}`);
-      printLine("Unknown command.", true);
+      printLine("Unknown command.", true); // Flicker effect added
   }
   currentState = "main";
   printLine();
@@ -141,7 +147,7 @@ function handleBioInput(command) {
       printLine("Opening Dev.to in a new tab...");
       setTimeout(() => {
         window.open("https://dev.to/ghotet", "_blank");
-      }, 1000);
+      }, 1000); // Simulate loading time
       break;
     case "2":
       printLine("> 2");
@@ -152,7 +158,7 @@ function handleBioInput(command) {
       break;
     default:
       printLine(`> ${command}`);
-      printLine("Invalid selection.", true);
+      printLine("Invalid selection.", true); // Flicker effect added
   }
   currentState = "main";
   printLine();
