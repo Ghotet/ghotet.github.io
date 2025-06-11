@@ -1,4 +1,4 @@
-/* Reset defaults */
+/* Reset some default styling */
 * {
     margin: 0;
     padding: 0;
@@ -26,9 +26,10 @@ body {
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     border: 2px solid #33ff33;
+    position: relative; /* Make sure content inside is positioned correctly */
 }
 
-/* Styling for the terminal input field */
+/* Make the input field invisible outside */
 #terminal-input {
     background: black;
     color: #33ff33;
@@ -37,13 +38,13 @@ body {
     font: inherit;
     width: 100%;
     caret-color: #33ff33;
-    padding: 10px;
-    position: absolute; /* Position it inside the terminal */
-    bottom: 20px; /* Keep it at the bottom of the terminal */
+    position: absolute;
+    bottom: 20px; /* Position at the bottom of the terminal */
     left: 20px; /* Align it with the left side */
+    visibility: hidden; /* Hide the input field outside the terminal box */
 }
 
-/* Cursor inside input field (ensure blinking) */
+/* Cursor styling */
 .cursor {
     display: inline-block;
     background-color: #33ff33;
@@ -51,57 +52,58 @@ body {
     height: 20px;
     margin-left: 5px;
     animation: blink 1s step-end infinite;
-    vertical-align: middle;
+    vertical-align: middle; /* Keep it aligned with text */
 }
 
+/* Animation for cursor blinking */
 @keyframes blink {
     50% {
         opacity: 0;
     }
 }
 
-/* Flicker effect */
+/* Flicker effect for certain text */
 .flicker {
-  animation: flicker 0.2s infinite alternate;
+    animation: flicker 0.2s infinite alternate;
 }
 
 @keyframes flicker {
-  0% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 /* Scanline effect (for terminal display) */
 .scanline {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.1);
-  animation: scanline 1s infinite;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    animation: scanline 1s infinite;
 }
 
 @keyframes scanline {
-  0% { top: -100%; }
-  50% { top: 50%; }
-  100% { top: 100%; }
+    0% { top: -100%; }
+    50% { top: 50%; }
+    100% { top: 100%; }
 }
 
 /* Glowing text effect */
 .intro, .root-dir {
-  animation: glowText 2s ease-in-out infinite alternate;
+    animation: glowText 2s ease-in-out infinite alternate;
 }
 
 @keyframes glowText {
-  0% {
-    text-shadow: 0 0 5px #33ff33, 0 0 10px #33ff33, 0 0 15px #33ff33;
-  }
-  100% {
-    text-shadow: 0 0 10px #33ff33, 0 0 20px #33ff33, 0 0 30px #33ff33;
-  }
+    0% {
+        text-shadow: 0 0 5px #33ff33, 0 0 10px #33ff33, 0 0 15px #33ff33;
+    }
+    100% {
+        text-shadow: 0 0 10px #33ff33, 0 0 20px #33ff33, 0 0 30px #33ff33;
+    }
 }
 
