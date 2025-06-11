@@ -20,6 +20,9 @@ inputArea.style.outline = "none";
 inputArea.style.font = "inherit";
 inputArea.style.width = "100%";
 inputArea.style.caretColor = "#33ff33";
+inputArea.style.position = "absolute";
+inputArea.style.bottom = "20px";
+inputArea.style.left = "20px"; // Keep it aligned to the bottom-left inside terminal
 
 let currentState = "main";
 
@@ -194,3 +197,9 @@ inputArea.addEventListener("keydown", function (e) {
     }
   }
 });
+
+// Function to clear the terminal
+function clearTerminal() {
+  output.innerHTML = ''; // Clears the content inside the terminal
+  printMainMenu(); // Reprint the main menu or any starting content
+}
