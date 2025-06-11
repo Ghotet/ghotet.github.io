@@ -26,10 +26,10 @@ body {
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     border: 2px solid #33ff33;
-    position: relative; /* Make sure content inside is positioned correctly */
+    position: relative; /* Keep the terminal content positioned properly */
 }
 
-/* Make the input field inside the terminal box, invisible but functional */
+/* Input field - now visible and inside the terminal */
 #terminal-input {
     background: black;
     color: #33ff33;
@@ -39,18 +39,18 @@ body {
     width: 100%;
     caret-color: #33ff33;
     position: absolute;
-    bottom: 20px;
+    bottom: 20px; /* Keep it at the bottom of the terminal */
     left: 20px;
-    opacity: 0; /* Make the input field transparent but still functional */
-    pointer-events: none; /* Disable mouse interaction, as input is typed inside terminal */
+    opacity: 1; /* Make the input field visible */
+    pointer-events: auto; /* Enable the input field */
 }
 
-/* Cursor styling */
+/* Smaller cursor inside input field */
 .cursor {
     display: inline-block;
     background-color: #33ff33;
-    width: 10px;
-    height: 20px;
+    width: 8px; /* Smaller cursor */
+    height: 16px; /* Smaller cursor */
     margin-left: 5px;
     animation: blink 1s step-end infinite;
     vertical-align: middle; /* Keep it aligned with text */
@@ -107,5 +107,3 @@ body {
         text-shadow: 0 0 10px #33ff33, 0 0 20px #33ff33, 0 0 30px #33ff33;
     }
 }
-
-
