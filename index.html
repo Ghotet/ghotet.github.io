@@ -1,48 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI [unknown] : shell access</title>
-  <style>
-    body {
-      background-color: black;
-      color: #33ff33;
-      font-family: 'Courier New', monospace;
-      margin: 0;
-      padding: 0;
-      font-size: 18px;
-    }
-
-    #console {
-      white-space: pre;
-      margin: 20px;
-      padding: 20px;
-      border: 2px solid #33ff33;
-    }
-
-    .flashing-cursor {
-      animation: blink 0.8s step-end infinite;
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    #input-line {
-      display: inline;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Terminal</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Styling -->
+    <script defer src="utils.js"></script> <!-- Utility functions -->
+    <script defer src="effects.js"></script> <!-- Effects like flickers -->
+    <script defer src="main.js"></script> <!-- Main terminal logic -->
 </head>
 <body>
-  <div id="console">
-    <div id="output"></div>
-    <div id="input-line">
-      <span id="input-text" contenteditable="true"></span><span class="flashing-cursor">█</span>
+    <div id="terminal">
+        <div id="output"></div>
+        <div id="input-wrapper"></div>
     </div>
-  </div>
-  <script src="main.js" defer></script>
 </body>
 </html>
