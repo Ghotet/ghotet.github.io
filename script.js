@@ -1,5 +1,6 @@
 const output = document.getElementById("output");
 const cursor = document.getElementById("cursor");
+
 const lines = [
   "Welcome to ghotet.com",
   "Initializing system...",
@@ -8,6 +9,7 @@ const lines = [
   "Loading AI stack...",
   "Ready."
 ];
+
 let index = 0;
 
 function typeLine(lineIndex = 0, charIndex = 0) {
