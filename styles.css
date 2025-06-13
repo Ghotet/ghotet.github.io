@@ -29,20 +29,22 @@ body {
     position: relative; /* Keep the terminal content positioned properly */
 }
 
-/* Make sure the input field is visible and inside the terminal box */
+#input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
 #terminal-input {
-    background: black;
-    color: #33ff33;
+    background: transparent;
     border: none;
+    color: #00ff00;
+    font-family: monospace;
+    font-size: inherit;
     outline: none;
-    font: inherit;
-    width: 100%;
-    caret-color: #33ff33;
-    position: absolute;
-    bottom: 20px; /* Keep it at the bottom of the terminal */
-    left: 20px; /* Align it with the left side */
-    opacity: 1; /* Make the input field visible */
-    pointer-events: auto; /* Enable the input field to capture input */
+    caret-color: #00ff00;
+    width: 90%;
 }
 
 /* Cursor styling inside input field */
