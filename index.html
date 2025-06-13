@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghost Terminal</title>
     <link rel="stylesheet" href="styles.css"> <!-- Styling -->
+    <script type="module" src="echonode.js"></script> <!-- EchoNode AI -->
     <script defer src="utils.js"></script> <!-- Utility functions -->
     <script defer src="effects.js"></script> <!-- Effects like flickers -->
     <script defer src="main.js"></script> <!-- Main terminal logic -->
@@ -13,7 +14,13 @@
     <div id="terminal">
         <div id="output"></div>
         <div id="input-wrapper">
-  <span>&gt; </span>
-  <input id="terminal-input" type="text" autofocus />
-</div>
+            <span>&gt; </span>
+            <input id="terminal-input" type="text" autofocus />
+        </div>
+    </div>
+
+    <!-- AI Shell -->
+    <div id="echonode-shell" style="display: none;"></div>
+</body>
+</html>
 
