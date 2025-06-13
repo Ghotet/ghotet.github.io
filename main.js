@@ -5,13 +5,11 @@ let currentState = "main";
 function printLine(text = "", flicker = false) {
   const line = document.createElement("div");
   line.textContent = text;
-
   if (flicker) {
     line.classList.add("flicker");
   }
-
   output.appendChild(line);
-  window.scrollTo(0, document.body.scrollHeight); // Scroll to bottom
+  window.scrollTo(0, document.body.scrollHeight);
 }
 
 // Slow print function for typing text slowly
@@ -45,20 +43,12 @@ function slowPrint(text, callback, speed = 10) {
   nextLine();
 }
 
-// Add cursor to the terminal
-//function addCursor() {
- // const cursor = document.createElement("span");
- // cursor.classList.add("cursor");
-  //document.getElementById("terminal").appendChild(cursor);
-//}
-
 // Initial intro sequence
 function printIntro() {
   const introText = `Welcome to ghotet.com\nInitializing system...\nBoot complete.\nLaunching terminal...\nLoading AI stack...\nReady.`;
   slowPrint(introText, () => {
     printLine();
     printMainMenu();
-    //addCursor(); // Add the cursor to the terminal
     const inputArea = document.getElementById("terminal-input");
     inputArea.focus();
 
@@ -119,8 +109,14 @@ function handleMainInput(command) {
       printLine("Clearance level insufficient. Returning to main menu.", true);
       break;
     case "5":
-      printLine("Pinging /EchoNode...", true);
-      printLine("No response. Ghost protocol active.", true);
+      printLine("Connecting to /EchoNode...");
+      setTimeout(() => {
+        if (typeof loadEchoNode === 'function') {
+          loadEchoNode();
+        } else {
+          printLine("[Error] EchoNode module missing.", true);
+        }
+      }, 500);
       break;
     case "x":
     case "c":
