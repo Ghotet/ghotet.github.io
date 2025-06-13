@@ -1,38 +1,15 @@
-// main.js
-
 const output = document.getElementById("output");
-const inputWrapper = document.createElement("div");
-const inputArea = document.createElement("input");
-
-inputWrapper.style.marginTop = "1em";
-inputWrapper.appendChild(inputArea);
-
-inputArea.setAttribute("type", "text");
-inputArea.setAttribute("id", "terminal-input");
-inputArea.setAttribute("autocomplete", "off");
-inputArea.setAttribute("autocorrect", "off");
-inputArea.setAttribute("autocapitalize", "off");
-inputArea.setAttribute("spellcheck", "false");
-inputArea.style.background = "black";
-inputArea.style.color = "#33ff33";
-inputArea.style.border = "none";
-inputArea.style.outline = "none";
-inputArea.style.font = "inherit";
-inputArea.style.width = "100%";
-inputArea.style.caretColor = "#33ff33";
-inputArea.style.opacity = "1"; // Make the input field visible
-
 let currentState = "main";
 
 // Function to print line to terminal with optional flicker effect
 function printLine(text = "", flicker = false) {
   const line = document.createElement("div");
   line.textContent = text;
-  
-  // If flicker is true, add the flicker effect
+
   if (flicker) {
     line.classList.add("flicker");
   }
+
   output.appendChild(line);
   window.scrollTo(0, document.body.scrollHeight); // Scroll to bottom
 }
@@ -41,13 +18,13 @@ function printLine(text = "", flicker = false) {
 function slowPrint(text, callback, speed = 10) {
   let index = 0;
   const lines = text.split("\n");
-  
+
   function nextLine() {
     if (index < lines.length) {
       const line = document.createElement("div");
       output.appendChild(line);
       let charIndex = 0;
-      
+
       function typeChar() {
         if (charIndex < lines[index].length) {
           line.textContent += lines[index][charIndex];
@@ -58,11 +35,13 @@ function slowPrint(text, callback, speed = 10) {
           setTimeout(nextLine, speed);
         }
       }
+
       typeChar();
     } else if (callback) {
       callback();
     }
   }
+
   nextLine();
 }
 
@@ -79,9 +58,22 @@ function printIntro() {
   slowPrint(introText, () => {
     printLine();
     printMainMenu();
-    document.body.appendChild(inputWrapper);
-    inputArea.focus();
     addCursor(); // Add the cursor to the terminal
+    const inputArea = document.getElementById("terminal-input");
+    inputArea.focus();
+
+    // Attach Enter key handler
+    inputArea.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const command = inputArea.value.trim();
+        inputArea.value = ""; // Clear input field
+        if (currentState === "main") {
+          handleMainInput(command);
+        } else if (currentState === "bio") {
+          handleBioInput(command);
+        }
+      }
+    });
   });
 }
 
@@ -102,16 +94,17 @@ function printMainMenu() {
 // Handle input in main state
 function handleMainInput(command) {
   clearTerminal();
-  printLine(`> ${command}`, true); // Print the user command inside terminal
+  printLine(`> ${command}`, true);
+
   switch (command) {
     case "1":
-      printLine("Accessing /AI... (not yet wired)", true); // Flicker effect added
+      printLine("Accessing /AI... (not yet wired)", true);
       break;
     case "2":
-      printLine("Opening /Vault... (coming soon)", true); // Flicker effect added
+      printLine("Opening /Vault... (coming soon)", true);
       break;
     case "3":
-      printLine("Reading /Bio...", true); // Flicker effect added
+      printLine("Reading /Bio...", true);
       setTimeout(() => {
         printLine("File system scan complete.");
         printLine("Fragmented record detected. Limited data recovered:");
@@ -122,35 +115,37 @@ function handleMainInput(command) {
       }, 500);
       return;
     case "4":
-      printLine("Attempting to access /Project [REDACTED]...", true); // Flicker effect added
-      printLine("Clearance level insufficient. Returning to main menu.", true); // Flicker effect added
+      printLine("Attempting to access /Project [REDACTED]...", true);
+      printLine("Clearance level insufficient. Returning to main menu.", true);
       break;
     case "5":
-      printLine("Pinging /EchoNode...", true); // Flicker effect added
-      printLine("No response. Ghost protocol active.", true); // Flicker effect added
+      printLine("Pinging /EchoNode...", true);
+      printLine("No response. Ghost protocol active.", true);
       break;
     case "x":
     case "c":
       clearTerminal();
       break;
     default:
-      printLine("Unknown command.", true); // Flicker effect added
+      printLine("Unknown command.", true);
   }
+
   currentState = "main";
   printLine();
   printMainMenu();
 }
 
-// Handle bio input
+// Handle input in bio state
 function handleBioInput(command) {
   clearTerminal();
-  printLine(`> ${command}`, true); // Print the user command inside terminal
+  printLine(`> ${command}`, true);
+
   switch (command) {
     case "1":
       printLine("Opening Dev.to in a new tab...");
       setTimeout(() => {
         window.open("https://dev.to/ghotet", "_blank");
-      }, 1000); // Simulate loading time
+      }, 1000);
       break;
     case "2":
       printLine("Opening GitHub in a new tab...");
@@ -159,38 +154,28 @@ function handleBioInput(command) {
       }, 1000);
       break;
     default:
-      printLine("Invalid selection.", true); // Flicker effect added
+      printLine("Invalid selection.", true);
   }
+
   currentState = "main";
   printLine();
+  printMainMenu();
 }
 
-// Add key listener to clear terminal with a single key (x or c)
+// Clear terminal with 'x' or 'c' globally
 document.addEventListener("keydown", (e) => {
   if (e.key === "x" || e.key === "c") {
     clearTerminal();
   }
 });
 
+// Start everything
 document.addEventListener("DOMContentLoaded", () => {
   printIntro();
 });
 
-// Capture user input
-inputArea.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    const command = inputArea.value.trim();
-    inputArea.value = ""; // Clear input field
-    if (currentState === "main") {
-      handleMainInput(command);
-    } else if (currentState === "bio") {
-      handleBioInput(command);
-    }
-  }
-});
-
-// Function to clear the terminal
+// Clear terminal and reset menu
 function clearTerminal() {
-  output.innerHTML = '';  // Clears the content inside the terminal
-  printMainMenu();  // Reprint the main menu or any starting content
+  output.innerHTML = '';
+  printMainMenu();
 }
