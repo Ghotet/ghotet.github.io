@@ -26,4 +26,3 @@ function slowPrint(text, callback, speed = 10) {
   }
   nextLine();
 }
-
