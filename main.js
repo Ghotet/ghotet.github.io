@@ -46,11 +46,11 @@ function slowPrint(text, callback, speed = 10) {
 }
 
 // Add cursor to the terminal
-function addCursor() {
-  const cursor = document.createElement("span");
-  cursor.classList.add("cursor");
-  document.getElementById("terminal").appendChild(cursor);
-}
+//function addCursor() {
+ // const cursor = document.createElement("span");
+ // cursor.classList.add("cursor");
+  //document.getElementById("terminal").appendChild(cursor);
+//}
 
 // Initial intro sequence
 function printIntro() {
