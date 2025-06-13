@@ -58,7 +58,7 @@ function printIntro() {
   slowPrint(introText, () => {
     printLine();
     printMainMenu();
-    addCursor(); // Add the cursor to the terminal
+    //addCursor(); // Add the cursor to the terminal
     const inputArea = document.getElementById("terminal-input");
     inputArea.focus();
 
