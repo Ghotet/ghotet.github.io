@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ghost Terminal</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Styling -->
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Scripts -->
     <script type="module" src="echonode.js"></script> <!-- EchoNode AI -->
-    <script defer src="utils.js"></script> <!-- Utility functions -->
-    <script defer src="effects.js"></script> <!-- Effects like flickers -->
-    <script defer src="main.js"></script> <!-- Main terminal logic -->
+    <script defer src="utils.js"></script>            <!-- Utility functions -->
+    <script defer src="effects.js"></script>          <!-- Terminal flicker effects -->
+    <script defer src="main.js"></script>             <!-- Main terminal logic -->
 </head>
 <body>
-    <div id="terminal">
+    <!-- Terminal Wrapper -->
+    <div id="terminal" class="terminal-border flicker-border">
         <div id="output"></div>
+
         <div id="input-wrapper">
-            <span>&gt; </span>
+            <span class="flicker-tag">&gt; </span>
             <input id="terminal-input" type="text" autofocus />
         </div>
     </div>
 
-    <!-- AI Shell -->
+    <!-- Optional EchoNode Shell for AI interface -->
     <div id="echonode-shell" style="display: none;"></div>
 </body>
 </html>
-
