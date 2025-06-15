@@ -8,25 +8,43 @@
 /* Terminal UI */
 body {
     background-color: #000;
-    color: #33ff33; /* Retro neon green */
+    color: #33ff33;
     font-family: 'Courier New', Courier, monospace;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow-x: hidden;
 }
 
 #terminal {
-    width: 80%;
+    width: 100%;
     max-width: 800px;
-    height: 80%;
+    height: auto;
     padding: 20px;
     overflow-y: auto;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     border: 2px solid #33ff33;
-    position: relative; /* Keep the terminal content positioned properly */
+    box-shadow: 0 0 8px #33ff33, 0 0 16px #33ff33;
+    animation: borderPulse 2.6s ease-in-out infinite, random-glitch 5s infinite;
+}
+
+/* Responsive constraint */
+@media (max-width: 850px) {
+  #terminal {
+    width: 95%;
+  }
+}
+
+@keyframes borderPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px #33ff33;
+  }
+  50% {
+    box-shadow: 0 0 20px #33ff33, 0 0 30px #33ff33;
+  }
 }
 
 #input-wrapper {
@@ -45,6 +63,7 @@ body {
     outline: none;
     caret-color: #00ff00;
     width: 90%;
+    text-shadow: 0 0 6px #00ff00;
 }
 
 /* Cursor styling inside input field */
@@ -58,7 +77,6 @@ body {
     vertical-align: middle;
 }
 
-/* Animation for cursor blinking */
 @keyframes blink {
     50% {
         opacity: 0;
@@ -68,18 +86,15 @@ body {
 /* Flicker effect for certain text */
 .flicker {
     animation: flicker 0.2s infinite alternate;
+    text-shadow: 0 0 4px #33ff33, 0 0 7px #33ff33;
 }
 
 @keyframes flicker {
-    0% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
-/* Scanline effect (for terminal display) */
+/* Scanline effect */
 .scanline {
     position: absolute;
     top: 0;
@@ -108,4 +123,57 @@ body {
     100% {
         text-shadow: 0 0 10px #33ff33, 0 0 20px #33ff33, 0 0 30px #33ff33;
     }
+}
+
+.terminal-border {
+    border: 2px solid #33ff33;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: black;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 800px;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    box-shadow: 0 0 12px #33ff33, 0 0 24px #33ff33;
+    animation: borderPulse 2.5s ease-in-out infinite;
+}
+
+.flicker-border {
+    animation: random-glitch 400ms infinite alternate;
+}
+
+@keyframes random-glitch {
+    0%   { box-shadow: 0 0 2px #33ff33; }
+    20%  { box-shadow: 0 0 8px #33ff33; }
+    40%  { box-shadow: 0 0 5px #33ff33, inset 0 0 4px #33ff33; }
+    60%  { box-shadow: 0 0 10px #33ff33, inset 0 0 2px #33ff33; }
+    80%  { box-shadow: 0 0 6px #33ff33; }
+    100% { box-shadow: 0 0 12px #33ff33, inset 0 0 5px #33ff33; }
+}
+
+.flicker-tag {
+    animation: flicker-crt 1.3s infinite steps(2, start);
+}
+
+@keyframes flicker-crt {
+    0%, 19%, 21%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 2px #33ff33, 0 0 5px #33ff33;
+    }
+    20% {
+        opacity: 0;
+        text-shadow: none;
+    }
+}
+
+/* Spacer utility */
+.spacer {
+    display: block;
+    height: 1em;
+    width: 100%;
 }
