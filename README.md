@@ -1,2 +1,2 @@
 # ghotet.github.io
-Ghotet.com
+Ghotet.dev
