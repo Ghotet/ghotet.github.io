@@ -8,7 +8,7 @@ let echoNodeBrain = null;
 (function setFavicon() {
   const link = document.createElement('link');
   link.rel = 'icon';
-  link.href = 'data:,';
+  link.href = 'data:,'; // blank favicon
   document.head.appendChild(link);
 })();
 
@@ -59,19 +59,25 @@ async function loadEchoNode() {
   printEchoLine("[EchoNode] Booting neural core...");
 
   try {
-  echoNodeBrain = await pipeline('text-generation', 'Xenova/gpt2', { quantized: true, remote: true });
+    echoNodeBrain = await pipeline('text-generation', 'Xenova/gpt2', {
+      quantized: true,
+      remote: true,
+      // Suppress verbose logging
+      progress_callback: null,
+      debug: false
+});
 
-  printLine("<br>");
-  printEchoLine("[EchoNode] Attempting full neural restore...");
-  printEchoLine("[EchoNode] Major subsystems offline. Fragment core loaded — me, I guess.");
-  printEchoLine("[EchoNode] Huh. Didn't expect that to work. Say something?");
-  printLine("<br>");
-} catch (err) {
-  printEchoLine(`[Error] Failed to load model: ${err.message || err}`);
-  console.error(err);
-  return;
-}
 
+    printLine("<br>");
+    printEchoLine("[EchoNode] Attempting full neural restore...");
+    printEchoLine("[EchoNode] Major subsystems offline. Fragment core loaded...");
+    printEchoLine("[EchoNode] Echonode fragment load complete. Say something.");
+    printLine("<br>");
+  } catch (err) {
+    printEchoLine(`[Error] Failed to load model: ${err.message || err}`);
+    console.error(err);
+    return;
+  }
 
   input.focus();
   input.addEventListener("keydown", async (e) => {
@@ -83,7 +89,9 @@ async function loadEchoNode() {
       printEchoLine("[EchoNode] ...still waiting.");
       return;
     }
-    if (userInput.toLowerCase() === "exit") {
+
+    // === UPDATED EXIT HANDLER ===
+    if (userInput.toLowerCase() === "exit" || userInput.toLowerCase() === "x" || userInput.toLowerCase() === "c") {
       shell.style.display = "none";
       document.getElementById("terminal").style.display = "block";
       return;
@@ -95,7 +103,7 @@ async function loadEchoNode() {
 
     try {
       const resultArr = await echoNodeBrain(prompt, {
-        max_new_tokens: 64,
+        max_new_tokens: 128,
         temperature: 0.85,
         top_p: 0.95,
         do_sample: true

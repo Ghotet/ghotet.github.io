@@ -30,30 +30,18 @@ function handleMainInput(command) {
 
   switch (command) {
     case "1":
+      currentSubState = "documents";
+      printDocuments(); // Dev.to RSS feed
+      break;
+
+    case "2":
       currentSubState = "bio";
       printBioLinks();
       break;
 
-    case "2":
+    case "3":
       currentSubState = "ai";
       printAIOptions();
-      break;
-
-    case "3":
-      currentSubState = "web_ai";
-      printLine("Launching Web_AI...");
-      setTimeout(() => {
-        if (typeof window.loadEchoNode === 'function') {
-          window.loadEchoNode();
-        } else {
-          printLine("[Error] Web_AI module missing.", true);
-        }
-      }, 500);
-      break;
-
-    case "4":
-    case "5":
-      printLine("Accessing /[unknown]... (feature unassigned)", true);
       break;
 
     case "x":
@@ -64,10 +52,10 @@ function handleMainInput(command) {
       break;
 
     default:
-      if (command.toLowerCase() === "ghost debug 6660") {
-        printLine(">> Ghost Protocol handshake accepted. Redirecting...");
+      if (command.toLowerCase() === "sys_check 6660") {
+        printLine(">>sys_check handshake accepted. Redirecting...");
         setTimeout(() => {
-          window.location.href = "ghost_debug_tool.html";
+          window.location.href = "sys_check.html";
         }, 1500);
       } else {
         printLine("Unknown command.", true);
@@ -105,20 +93,79 @@ function handleAIInput(command) {
       printLine("Redirecting to ghotet.com...");
       setTimeout(() => window.open("https://ghotet.com", "_blank"), 1000);
       break;
+
     case "2":
-      printLine("Loading internal system tools... (not implemented)", true);
+      printLine("Launching EchoNode...");
+      setTimeout(() => {
+        if (typeof window.loadEchoNode === 'function') {
+          window.loadEchoNode();
+        } else {
+          printLine("[Error] EchoNode module missing or not loaded.", true);
+        }
+      }, 500);
       break;
+
     case "x":
     case "c":
       goToMainMenu();
       currentSubState = null;
       break;
+
     default:
       printLine("Invalid selection.", true);
   }
 }
 
-// ----- BIO & AI PRINT LOGIC -----
+// ----- AI PRINT LOGIC -----
+function printAIOptions() {
+  output.innerHTML = '';
+  printLine("Accessing /AI Stack...", true);
+  setTimeout(() => {
+    printLine("1. Redirect to full-stack host (ghotet.com)");
+    printLine("2. Launch EchoNode (AI interface)");
+    printLine("Press 'x' or 'c' then Enter to return to main menu.");
+  }, 500);
+}
+
+// ----- DOCUMENTS / DEV.TO RSS -----
+async function printDocuments() {
+  output.innerHTML = '';
+  printLine("Accessing /Documents...", true);
+  setTimeout(async () => {
+    printLine("Fetching Dev.to posts...");
+    const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+    const feedUrl = encodeURIComponent('https://dev.to/ghotet/feed');
+
+    try {
+      const res = await fetch(`${CORS_PROXY}${feedUrl}`);
+      if (!res.ok) throw new Error(`Network error: ${res.status}`);
+      const text = await res.text();
+
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(text, "application/xml");
+      const items = xml.querySelectorAll("item");
+
+      if (!items.length) {
+        printLine("> No posts found or feed could not be parsed.");
+        console.warn("Parsed XML:", xml);
+      } else {
+        items.forEach((item, i) => {
+          const title = item.querySelector("title")?.textContent || "No title";
+          const link = item.querySelector("link")?.textContent || "#";
+          printLine(`${i + 1}. ${title} (${link})`);
+        });
+      }
+
+      printLine("<br>");
+      printLine("Press 'x' or 'c' then Enter to return to main menu.");
+    } catch (err) {
+      printLine("> Failed to fetch posts. Check console for details.");
+      console.error("Dev.to fetch error:", err);
+    }
+  }, 500);
+}
+
+// ----- BIO PRINT LOGIC -----
 function printBioLinks() {
   output.innerHTML = '';
   printLine("Accessing /Bio-links...", true);
@@ -134,25 +181,21 @@ function printBioLinks() {
   }, 500);
 }
 
-function printAIOptions() {
-  output.innerHTML = '';
-  printLine("Accessing /AI Stack...", true);
-  setTimeout(() => {
-    printLine("1. Redirect to full-stack host (ghotet.com)");
-    printLine("2. View internal system (coming soon)");
-    printLine("Press 'x' or 'c' then Enter to return to main menu.");
-  }, 500);
-}
-
 // ----- ENTRY POINT -----
 window.addEventListener("DOMContentLoaded", () => {
   output = document.getElementById("output");
   inputArea = document.getElementById("terminal-input");
 
   setOutputRef(output);
-  setMenuOutput(output); // for goToMainMenu()
+  setMenuOutput(output);
 
   printIntro();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.error('SW registration failed:', err));
+  }
 
   inputArea.addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
@@ -166,11 +209,33 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (currentState === "main") handleMainInput(command);
-    else if (currentSubState === "bio") handleBioInput(command);
-    else if (currentSubState === "ai") handleAIInput(command);
-    else if (currentSubState === "web_ai") {
-      // Let Web_AI handle its own input internally
+    // --- FIXED: reliable submenu routing ---
+    switch (currentSubState) {
+      case "documents":
+        handleDocumentsInput(command);
+        break;
+      case "bio":
+        handleBioInput(command);
+        break;
+      case "ai":
+        handleAIInput(command);
+        break;
+      default:
+        handleMainInput(command);
+        break;
     }
   });
 });
+
+// Optional: handleDocumentsInput for future interactive feed actions
+function handleDocumentsInput(command) {
+  if (command.toLowerCase() === "x" || command.toLowerCase() === "c") {
+    goToMainMenu();
+    currentSubState = null;
+  } else {
+    printLine("Type 'x' or 'c' then Enter to return to main menu.", true);
+  }
+}
+
+
+

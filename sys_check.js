@@ -15,13 +15,14 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function showList() {
-    addLine("Ghost Protocol v0.2");
+    addLine("System Protocol v0.2");
     addLine("> Decryption complete. Archive index:");
     files.forEach((file, i) => {
       addLine(`  [${i + 1}] ${file.title}`);
     });
     addSpacer();
     addLine("> Type a number and press Enter to load.");
+    addLine("> Press 'x' or 'c' then Enter to return to the terminal.");
   }
 
   function loadVideo(index) {
@@ -51,18 +52,35 @@ window.addEventListener("DOMContentLoaded", () => {
 
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
-        const val = parseInt(input.value.trim());
+        const command = input.value.trim().toLowerCase();
+        input.value = "";
+
+        // Terminal-style back to main menu
+        if (command === "x" || command === "c") {
+          window.location.href = "index.html";
+          return;
+        }
+
+        const val = parseInt(command);
         input.disabled = true;
+
         if (!isNaN(val) && val >= 1 && val <= files.length) {
           loadVideo(val - 1);
+          // Keep input enabled after loading video
+          setTimeout(() => {
+            input.disabled = false;
+            input.focus();
+          }, 500);
         } else {
           addLine("> Invalid selection.");
+          input.disabled = false;
+          input.focus();
         }
       }
     });
   }
 
-  fetch("vault_manifest.json")
+  fetch("sys_manifest.json")
     .then(res => res.json())
     .then(json => {
       files = json;
@@ -71,6 +89,6 @@ window.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => {
       addLine("> Failed to load secure archive.");
-      console.error("Vault manifest load error:", err);
+      console.error("System manifest load error:", err);
     });
 });

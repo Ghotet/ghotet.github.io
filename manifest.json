@@ -2,7 +2,9 @@
   "name": "Ghotet",
   "short_name": "Ghotet",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#00ff88",
   "icons": [
@@ -18,3 +20,4 @@
     }
   ]
 }
+
