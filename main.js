@@ -2,6 +2,7 @@
 import { slowPrint, printLine, setOutputRef } from './utils.js';
 import { goToMainMenu, setMenuOutput } from './menuUtils.js';
 
+
 // ----- STATE MANAGEMENT -----
 let currentState = "intro";
 let awaitingEnter = true;
@@ -127,29 +128,38 @@ function printAIOptions() {
   }, 500);
 }
 
-// ----- DOCUMENTS / DEV.TO RSS (updated) -----
+let devtoPosts = []; // store fetched posts globally
+
+// ----- DOCUMENTS / DEV.TO RSS -----
 async function printDocuments() {
   output.innerHTML = '';
   printLine("Accessing /Documents...", true);
+
   setTimeout(async () => {
-    printLine("Fetching Dev.to posts...");
+    printLine("Fetching Dev.to posts...\n");
 
     try {
+      // fetch articles via Dev.to API (JSON)
       const res = await fetch('https://dev.to/api/articles?username=ghotet');
       if (!res.ok) throw new Error(`Network error: ${res.status}`);
-      const posts = await res.json();
+      devtoPosts = await res.json();
 
-      if (!posts.length) {
+      if (!devtoPosts.length) {
         printLine("> No posts found.");
-        console.warn("Dev.to returned empty array:", posts);
+        console.warn("Dev.to returned empty array:", devtoPosts);
       } else {
-        posts.forEach((post, i) => {
-          printLine(`${i + 1}. ${post.title} (${post.url})`);
+        printLine("Available Articles:\n");
+
+        devtoPosts.forEach((post, i) => {
+          // print numbered title only, spaced out
+          printLine(`${i + 1}. ${post.title}\n`);
         });
+
+        printLine("Type the number of the article to view it.");
+        printLine("Press 'x' or 'c' then Enter to return to main menu.\n");
       }
 
-      printLine("<br>");
-      printLine("Press 'x' or 'c' then Enter to return to main menu.");
+      currentSubState = "documents"; // ensure input handler knows we're in documents
     } catch (err) {
       printLine("> Failed to fetch posts. Check console for details.");
       console.error("Dev.to fetch error:", err);
@@ -219,15 +229,82 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Optional: handleDocumentsInput for future interactive feed actions
+// ----- HANDLE DOCUMENT INPUT -----
 function handleDocumentsInput(command) {
+  if (!command) return;
+
   if (command.toLowerCase() === "x" || command.toLowerCase() === "c") {
     goToMainMenu();
     currentSubState = null;
+    return;
+  }
+
+  const index = parseInt(command) - 1;
+  if (!isNaN(index) && devtoPosts[index]) {
+    viewDevtoArticle(devtoPosts[index]);
   } else {
-    printLine("Type 'x' or 'c' then Enter to return to main menu.", true);
+    printLine("Invalid selection. Type the article number, or 'x/c' to return.", true);
   }
 }
+
+async function viewDevtoArticle(post) {
+  output.innerHTML = '';
+  printLine(`Loading "${post.title}"...\n`, true);
+
+  try {
+    const res = await fetch(post.url);
+    if (!res.ok) throw new Error(`Network error: ${res.status}`);
+    const html = await res.text();
+
+    // parse article content
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const articleEl = doc.querySelector("article");
+
+    if (!articleEl) {
+      printLine("Could not parse article content.\n");
+      return;
+    }
+
+    // map each child node to terminal-friendly text
+    function parseNode(node) {
+      if (!node) return '';
+
+      switch (node.nodeName.toLowerCase()) {
+        case 'p':
+          return node.innerText + '\n\n';
+        case 'h1':
+        case 'h2':
+        case 'h3':
+          return node.innerText.toUpperCase() + '\n\n';
+        case 'li':
+          return '- ' + node.innerText + '\n';
+        case 'ul':
+        case 'ol':
+          return Array.from(node.children).map(parseNode).join('') + '\n';
+        default:
+          // recurse on child nodes
+          return Array.from(node.childNodes).map(parseNode).join('');
+      }
+    }
+
+    let articleText = Array.from(articleEl.childNodes)
+      .map(parseNode)
+      .join('');
+
+    // trim excessive blank lines
+    articleText = articleText.replace(/\n{3,}/g, '\n\n');
+
+    printLine(articleText + '\n');
+    printLine("Press 'x' or 'c' then Enter to return to /Documents menu.\n");
+
+    currentSubState = "documents";
+  } catch (err) {
+    printLine("> Failed to load article. Check console for details.");
+    console.error("Article fetch error:", err);
+  }
+}
+
 
 
 
