@@ -127,32 +127,24 @@ function printAIOptions() {
   }, 500);
 }
 
-// ----- DOCUMENTS / DEV.TO RSS -----
+// ----- DOCUMENTS / DEV.TO RSS (updated) -----
 async function printDocuments() {
   output.innerHTML = '';
   printLine("Accessing /Documents...", true);
   setTimeout(async () => {
     printLine("Fetching Dev.to posts...");
-    const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-    const feedUrl = encodeURIComponent('https://dev.to/ghotet/feed');
 
     try {
-      const res = await fetch(`${CORS_PROXY}${feedUrl}`);
+      const res = await fetch('https://dev.to/api/articles?username=ghotet');
       if (!res.ok) throw new Error(`Network error: ${res.status}`);
-      const text = await res.text();
+      const posts = await res.json();
 
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(text, "application/xml");
-      const items = xml.querySelectorAll("item");
-
-      if (!items.length) {
-        printLine("> No posts found or feed could not be parsed.");
-        console.warn("Parsed XML:", xml);
+      if (!posts.length) {
+        printLine("> No posts found.");
+        console.warn("Dev.to returned empty array:", posts);
       } else {
-        items.forEach((item, i) => {
-          const title = item.querySelector("title")?.textContent || "No title";
-          const link = item.querySelector("link")?.textContent || "#";
-          printLine(`${i + 1}. ${title} (${link})`);
+        posts.forEach((post, i) => {
+          printLine(`${i + 1}. ${post.title} (${post.url})`);
         });
       }
 
