@@ -2,7 +2,7 @@ const CACHE_NAME = 'ghotet-cache-v1';
 const urlsToCache = [
   '/',                        // main page
   '/index.html',              // terminal page
-  '/sys_check.html',          // your vault page
+  '/sys_check.html',          // system check
   '/main.js',
   '/sys_check.js',
   '/utils.js',
